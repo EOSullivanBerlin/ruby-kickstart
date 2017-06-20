@@ -1,30 +1,54 @@
-def spiral_access(arrays, iteration=0, &block)
-  y_max = arrays.length - 1
-  x_max = arrays.first.length - 1
+def spiral_access(two_d,&block)
+  return[[]] if two_d.empty? || two_d[0].empty?
+  spiral_order = []
 
-  # base step
-  return if y_max/2 < iteration || x_max/2 < iteration
+  ((two_d.length+1)/2).times do |count|
+    x = count
+    y = count
 
-  # top row
-  iteration.upto x_max-iteration do |x|
-    block.call arrays[iteration][x]
+    #Moving to the right
+    while y < two_d.length - count
+      block.call two_d[x][y]
+      y += 1
+    end
+    y-= 1
+
+    #Moving down
+    x += 1
+    while x < two_d.length - count
+      block.call two_d[x][y]
+      x += 1
+    end
+    x -= 1
+
+    #Moving to the left
+    y -= 1
+    while y >= 0 + count
+      block.call two_d[x][y]
+      y -= 1
+    end
+    y += 1
+
+    #Moving up
+    x -= 1
+    while x > 0 + count
+      block.call two_d[x][y]
+      x -= 1
+    end
+    x += 1
+
   end
-
-  # right column
-  (iteration + 1).upto y_max-iteration do |y|
-    block.call arrays[y][x_max-iteration]
-  end
-
-  # bottom row
-  (x_max - 1 - iteration).downto iteration do |x|
-    block.call arrays[y_max-iteration][x]
-  end
-
-  # left column
-  (y_max - 1 - iteration).downto iteration+1 do |y|
-    block.call arrays[y][iteration]
-  end
-
-  # recursive step
-  spiral_access arrays, iteration+1, &block
 end
+
+two_d = [
+    [ 1,  2,  3,  4, 5],
+    [16, 17, 18, 19, 6],
+    [15, 24, 25, 20, 7],
+    [14, 23, 22, 21, 8],
+    [13, 12, 11, 10, 9],
+  ]
+order = []
+spiral_access two_d do |i|
+  order << i
+end
+p order
